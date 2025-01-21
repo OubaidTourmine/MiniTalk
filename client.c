@@ -39,3 +39,45 @@ int	ft_atoi(char *str)
 		return (0);
 	}
 	return (result * signe);
+}
+
+void	ft_send_bits(int pid, char i)
+{
+	int	c;
+
+	c = 0x80;
+	while (c)
+	{
+		if ((c & i) != 0)
+			kill(pid, SIGUSR1);
+		else
+			kill(pid, SIGUSR2);
+		c = c >> 1;
+		usleep(125);
+	}
+}
+
+int	main(int ac, char **av)
+{
+	int	i;
+	int	pid;
+
+	if (ac == 3)
+	{
+		i = 0;
+		pid = ft_atoi(av[1]);
+		if (pid <= 0 || av[2][0] == '\0')
+		{
+			write(2, "Error in PID or the message is empty\n", 38);
+			exit(1);
+		}
+		while (av[2][i])
+		{
+			ft_send_bits(pid, av[2][i]);
+			i++;
+		}
+		ft_send_bits(pid, '\n');
+	}
+	else
+		write(2, "Too many or few arguments\n", 27);
+}
