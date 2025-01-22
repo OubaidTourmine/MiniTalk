@@ -28,3 +28,33 @@ int	ft_atoi(char *str)
 	result = 0;
 	signe = 1;
 	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
+		i++;
+	while (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			signe *= -1;
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		result = result * 10 + str[i] - 48;
+		i++;
+	}
+	if (str[i] != '\0')
+	{
+		return (0);
+	}
+	return (result * signe);
+}
+
+void	ft_send_bits(int pid, char i)
+{
+	int	c;
+
+	c = 0x80;
+	while (c)
+	{
+		if ((c & i) != 0)
+			kill(pid, SIGUSR1);
+		else
+			kill(pid, SIGUSR2);
