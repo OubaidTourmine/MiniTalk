@@ -58,3 +58,33 @@ void	ft_send_bits(int pid, char i)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
+		c = c >> 1;
+		usleep(125);
+	}
+}
+
+int	main(int ac, char **av)
+{
+	int	i;
+	int	pid;
+
+	if (ac == 3)
+	{
+		i = 0;
+		pid = ft_atoi(av[1]);
+		if (pid <= 0 || av[2][0] == '\0')
+		{
+			write(2, "Error in PID or the message is empty\n", 38);
+			exit(1);
+		}
+		while (av[2][i])
+		{
+			ft_send_bits(pid, av[2][i]);
+			i++;
+		}
+		ft_send_bits(pid, '\n');
+		confirm_msg(SIGUSR2);
+	}
+	else
+		write(2, "Too many arguments\n", 20);
+}
