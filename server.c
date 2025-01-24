@@ -32,3 +32,37 @@ void	ft_putnbr(int nb)
 	}
 	if (nb < 10)
 	{
+		ft_putchar (nb + 48);
+	}
+	else
+	{
+		ft_putnbr(nb / 10);
+		ft_putchar(nb % 10 + 48);
+	}
+}
+
+void	chi_haja(int *bit, char *i, siginfo_t *sig)
+{
+	static pid_t	pid = 0;
+
+	if (pid == 0)
+	{
+		pid = sig->si_pid;
+	}
+	if (pid != sig->si_pid)
+	{
+		pid = sig->si_pid;
+		*i = 0;
+		*bit = 0;
+	}
+}
+
+void	ft_handler(int signal, siginfo_t *sig, void *context)
+{
+	static int	bit = 0;
+	static char	i = 0;
+
+	(void)context;
+	chi_haja(&bit, &i, sig);
+	if (signal == SIGUSR1)
+	{
