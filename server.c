@@ -66,3 +66,38 @@ void	ft_handler(int signal, siginfo_t *sig, void *context)
 	chi_haja(&bit, &i, sig);
 	if (signal == SIGUSR1)
 	{
+		i = i << 1;
+		i++;
+	}
+	else if (signal == SIGUSR2)
+	{
+		i = i << 1;
+	}
+	bit++;
+	if (bit == 8)
+	{
+		write(1, &i, 1);
+		bit = 0;
+		i = 0;
+	}
+}
+
+int	main(void)
+{
+	struct sigaction	action;
+
+	write(1, "PID is = ", 10);
+	ft_putnbr(getpid());
+	write(1, "\n", 1);
+	action.sa_flags = SA_SIGINFO;
+	action.sa_sigaction = ft_handler;
+	sigemptyset(&action.sa_mask);
+	sigaddset(&action.sa_mask, SIGUSR1);
+	sigaddset(&action.sa_mask, SIGUSR2);
+	sigaction(SIGUSR1, &action, NULL);
+	sigaction(SIGUSR2, &action, NULL);
+	while (1)
+	{
+	}
+	return (0);
+}
